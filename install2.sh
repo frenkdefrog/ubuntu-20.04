@@ -72,17 +72,23 @@ apt -y install ssh
 apt -y install zfs-auto-snapshot
 apt -y install unattended-upgrades
 apt -y install snapd
-zfs set autoreplace=on ${POOL}
+zpool set autoreplace=on ${POOL}
 cat <<EOF >>/etc/zfs/zed.d/zed.rc
-  ##
-  # Replace a device with a hot spare after N checksum errors are detected.
-  # Disabled by default; uncomment to enable.
-  #
-  ZED_SPARE_ON_CHECKSUM_ERRORS=10
-  ##
-  # Replace a device with a hot spare after N I/O errors are detected.
-  # Disabled by default; uncomment to enable.
-  #
-  ZED_SPARE_ON_IO_ERRORS=10
-  EOF
+##
+# Replace a device with a hot spare after N checksum errors are detected.
+# Disabled by default; uncomment to enable.
+#
+ZED_SPARE_ON_CHECKSUM_ERRORS=10
+##
+# Replace a device with a hot spare after N I/O errors are detected.
+# Disabled by default; uncomment to enable.
+#
+ZED_SPARE_ON_IO_ERRORS=10
+EOF
+sed -i '/Unattended-Upgrade::MinimalSteps/s/^\/\///g' /etc/apt/apt.conf.d/50unattended-upgrades
 
+sed -i 's/^\/\/Unattended-Upgrade::Mail ""/Unattended-Upgrade::Mail "root"/g' /etc/apt/apt.conf.d/50unattended-upgrades
+
+sed -i '/Unattended-Upgrade::Remove-Unused-Kernel-Packages/s/^\/\///g' /etc/apt/apt.conf.d/50unattended-upgrades
+
+sed -i 's/\/\/ Unattended-Upgrade::SyslogEnable "false"/Unattended-Upgrade::SyslogEnable "true"/g' /etc/apt/apt.conf.d/50unattended-upgrades
