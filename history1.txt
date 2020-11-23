@@ -1,0 +1,194 @@
+    1  . /tmp/install2.sh 
+    2  exit
+    3  apt update
+    4  ls
+    5  adduser lorinc
+    6  adduser lorinc sudo
+    7  passwd
+    8  exit
+    9  loadkeys hu
+   10  apt update
+   11  zpool status
+   12  exit
+   13  systemctl poweroff
+   14  lsblk
+   15  zpool status
+   16  zfs list
+   17  ls /mnt
+   18  mount /dev/sda1 /mnt
+   19  ls /mnt/
+   20  umount /mnt
+   21  mount /dev/sdb1 /mnt
+   22  ls
+   23  ls /mnt
+   24  ls -lah /mnt/EFI/
+   25  ls -lah /mnt/EFI/BOOT/
+   26  umount /mnt
+   27  lsblk
+   28  export DISKS="sdc"
+   29  for disk in ${DISKS} ; do sgdisk -Z -n9:-8M:0 -t9:bf07 -c9:${disk}9-Reserved -n1:1m:+512M -t1:${PARTTYPE} -c1:${disk}1-${BOOT} -n2:0:0 -t2:bf01 -c2:${disk}2-zfs /dev/${disk}; done
+   30  mount /dev/sdc1 /mnt
+   31  mkdosfs -F 32 -n UEFI-SDC /dev/sdc1 
+   32  mount /dev/sdc1 /mnt
+   33  rsync -a /boot/efi/ /mnt/
+   34  ls /mnt
+   35  umount /mnt
+   36  zpool add --help
+   37  zpool add fickopool spare /dev/sdc2
+   38  zfs list
+   39  zpool list
+   40  zpool status
+   41  history
+   42  apt update
+   43  zfs list -t snapshot
+   44  apt search zfs-snapshot
+   45  apt search zfssnapshot
+   46  apt search snapshot
+   47  apt install zfs-auto-snapshot
+   48  zfs list -t snapshot
+   49  zfs list
+   50  zfs snapshot -R fickopool/ROOT@20201120 fickopool/var/lib/dpkg@20201120
+   51  zfs snapshot -r fickopool/ROOT@20201120 fickopool/var/lib/dpkg@20201120
+   52  zfs list -t snapshot
+   53  zfs list -o name,used,avail,refer,refquota,reservation,refreservation
+   54  ls -lah /var/cache/apt/archives/
+   55  zfs list
+   56  zfs snapshot fickopool/var/cache/apt@teszt
+   57  zfs list -t snapshot
+   58  rm -r /var/cache/apt/archives/
+   59  ls -la /var/cache/apt/
+   60  zfs list -t snapshot
+   61  zfs rollback
+   62  zfs rollback fickopool/var/cache/apt@teszt
+   63  zfs list -t snapshot
+   64  ls -lah /var/cache/apt/
+   65  ls -lah /var/cache/apt/archives/
+   66  rm -r /var/cache/apt/archives
+   67  zfs list -t snapshot
+   68  ls fickopool/var/cache/apt@teszt/.zfs
+   69  ls -lah /var/cache/apt/.zfs
+   70  ls -lah /var/cache/apt/.zfs/snapshot/teszt
+   71  rm -r /var/cache/apt/.zfs/snapshot/teszt/archives
+   72  zfs list -t snapshot
+   73  zfs rollback fickopool/var/cache/apt@teszt
+   74  zfs list -t snapshot
+   75  zfs get com.sun:auto-snapshot fickopool/tmp
+   76  zfs get com.sun:auto-snapshot fickopool/var
+   77  zfs list -t -snapshot
+   78  zfs list -t snapshot
+   79  zfs set com.sun:auto-snapshot:frequent=false fickopool/var/log
+   80  zfs list -t snapshot
+   81  date
+   82  ls /etc/localtime 
+   83  cat /etc/localtime 
+   84  dpkg-reconfigure tzdata
+   85  date
+   86  zfs list -t snapshot
+   87  for i in $(zfs list -t snapshot | awk -F " " '{print $1}'); do echo $i; done
+   88  for i in $(zfs list -t snapshot | awk -F " " '{print $1}'); do zfs destroy -t $i; done
+   89  zfs list -t snapshot
+   90  for i in $(zfs list -t snapshot | awk -F " " '{print $1}'); do zfs destroy -f $i; done
+   91  zfs list -t snapshot
+   92  apt update
+   93  apt install unattended-upgrades
+   94  dpkg-reconfigure unattended-upgrades
+   95  cat /etc/apt/apt.conf.d/20auto-upgrades 
+   96  vim /etc/apt/apt.conf.d/50unattended-upgrades 
+   97  exit
+   98  zpool status
+   99  zfs list -t snapshot
+  100  zfs list -t snapshot | grep frequent
+  101  zfs list -t snapshot | grep frequent | wc -l
+  102  zfs list -t snapshot | grep frequent | wc -l / 4
+  103  zfs list
+  104  zfs list | wc -l
+  105  vim /etc/apt/apt.conf.d/50unattended-upgrades 
+  106  snap list
+  107  apt install snapd
+  108  snap list
+  109  snap install lxd
+  110  snap change
+  111  snap changes
+  112  snap info core
+  113  snap refresh core
+  114  snap install core
+  115  snap info core
+  116  snap refresh core
+  117  snap revert coret
+  118  snap revert core
+  119  snap list --all
+  120  lxc ls
+  121  snap get system.refresh
+  122  snap set system refresh.timer=mon-fri,20:00~22:00,4:00~6:00,,sat-sun,10:00-22:00/4
+  123  snap get refresh
+  124  snap get system refresh
+  125  snap refresh
+  126  lsblk
+  127  zpool status
+  128  apt install zfs-zed
+  129  vim /etc/zfs/zed.d/zed.rc 
+  130  zpool history
+  131  zfs list -t snapshot
+  132  zfs list
+  133  zpool status
+  134  zpool iostat
+  135  zpool events
+  136  zfs list
+  137  zpool status
+  138  zpool get autoreplace fickopool
+  139  zpool set autorplace=on fickopool
+  140  zpool set autoreplace=on fickopool
+  141  zpool get autoreplace fickopool
+  142  cat <<EOF >>/etc/zfs/zed.d/zed.rc 
+  143  ##
+  144  # Replace a device with a hot spare after N checksum errors are detected.
+  145  # Disabled by default; uncomment to enable.
+  146  #
+  147  ZED_SPARE_ON_CHECKSUM_ERRORS=10
+  148  ##
+  149  # Replace a device with a hot spare after N I/O errors are detected.
+  150  # Disabled by default; uncomment to enable.
+  151  #
+  152  ZED_SPARE_ON_IO_ERRORS=10
+  153  EOF
+  154  vim /etc/zfs/zed.d/zed.rc 
+  155  zpool status
+  156  mkdosfs -F 32 -n EFI-SDC1 /dev/sdc1
+  157  mount /dev/sdc1 /mnt
+  158  ls /mnt
+  159  ls -lah /mnt
+  160  rsync -a /boot/efi/ /mnt/
+  161  ls -lah /mnt
+  162  umount /mnt
+  163  sgdisk -Z /dev/sdb
+  164  zpool status
+  165  zpool scrub systempool
+  166  zpool scrub fickopool
+  167  zpool status fickopool
+  168  systemctl reboot
+  169  zpool status
+  170  zpool replace -o ashift=12 fickopool 4196401018449978254 sdc2
+  171  zpool status
+  172  zpool detach fickopool 4196401018449978254
+  173  zpool status
+  174  history
+  175  zpool status
+  176  asdf
+  177  history
+  178  teszt
+  179  éajféla
+  180  history
+  181  exit
+  182  zpool status
+  183  lsblk
+  184  zfs list -t snapshot
+  185  zfs list -t snapshot | grep -v "0B"
+  186  zpool status
+  187  export DISKS="sdb"
+  188  for disk in ${DISKS} ; do sgdisk -Z -n9:-8M:0 -t9:bf07 -c9:${disk}9-Reserved -n1:1m:+512M -t1:${PARTTYPE} -c1:${disk}1-${BOOT} -n2:0:0 -t2:bf01 -c2:${disk}2-zfs /dev/${disk}; done
+  189  lsblk
+  190  zpool attach fickopool spare sdb2
+  191  zpool add fickopool spare sdb2
+  192  zpool status
+  193  history
+  194  history > /tmp/history1.txt
