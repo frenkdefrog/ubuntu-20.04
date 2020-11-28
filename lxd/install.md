@@ -63,6 +63,7 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: n
 ```
 ---
 ## Working with a container
+
 ### Creating and launching a new container
 ```lxc launch ubuntu:18.04 filesrv```
 
@@ -80,6 +81,12 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: n
 #### Limit generally all container's root size
 ```lxc profile device set default root size 10GB```
 
+#### Limit generally all container's disk I/O read
+```lxc config device set <container> root limits.read 10MB```
+
+#### Limit generally all container's disk I/O write
+```lxc config device set <container> root limits.write 10MB```
+
 #### Override the root disk first
 ``` lxc config device override <container> root```
 #### Limit the root disk size 
@@ -87,34 +94,45 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: n
 
 ### Add new disk to container
 ``` lxc config device add <container> <disk given name> disk source=<source path> path=<dest path in the container>```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
 
+### Restart a container
+``` lxc restart <container>```
+
+### Send any file to a container
+``` lxc file push <file-to-push> <container>/<path>```
+
+### Pull any file from container
+``` lxc file pull <container>/<path> <where-to-pull-in-host>```
+
+---
+
+## Snapshots
+
+### Snapshot a container
+``` lxc snapshot <container> <name-of-snapshot>```
+
+### Check snapshots of a container
+``` lxc info filesrv --verbose```
+### 
+``` ```
+### 
+``` ```
+### 
+``` ```
+### 
+``` ```
+### 
+``` ```
+### 
+``` ```
 
 ---
 ## Get information
 ### Info about the system
 ``` lxc info```
+
+### Get log info of a container
+``` lxc info <container> --show-log```
 
 ### List containers
 ```lxc list```
@@ -132,6 +150,8 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: n
 
 ### Show config of a container
 ```lxc config show <container>```
+
+```lxc config show --expanded <container>```
 
 ### Get device list of a container
 ```lxc config device list <container>```
