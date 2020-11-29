@@ -113,18 +113,15 @@ Would you like a YAML "lxd init" preseed to be printed? (yes/no) [default=no]: n
 
 ### Check snapshots of a container
 ``` lxc info filesrv --verbose```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
-### 
-``` ```
+
+### How to create own image
+``` lxc publish <container>/<snapthoname> --alias <new_container_name>```
+
+### Export an image then use on another servers
+``` lxc image export <alias> <filename>```
+
+### Import from file
+``` lxc image import <filename-to-import> --alias <containername>```
 
 ---
 ## Get information
